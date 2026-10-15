@@ -1,0 +1,140 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --canvas: 248 248 244;
+    --surface: 255 255 255;
+    --surface-2: 242 242 236;
+    --line: 226 227 219;
+    --ink: 26 30 29;
+    --muted: 88 96 93;
+    --subtle: 128 135 132;
+    --primary: 18 63 54;
+    --primary-hover: 12 46 39;
+    --on-primary: 255 255 255;
+    --accent: 78 159 112;
+    --accent-soft: 229 241 233;
+    --brand: 18 63 54;
+    --star: 224 154 18;
+    --warn: 161 98 7;
+    --warn-soft: 253 243 220;
+    --danger: 185 44 44;
+    --danger-soft: 252 232 230;
+    --info: 37 99 165;
+    --info-soft: 226 238 250;
+    color-scheme: light;
+  }
+
+  .dark {
+    --canvas: 13 18 17;
+    --surface: 21 27 26;
+    --surface-2: 29 37 35;
+    --line: 45 55 52;
+    --ink: 234 237 233;
+    --muted: 166 174 170;
+    --subtle: 122 131 127;
+    --primary: 98 182 133;
+    --primary-hover: 118 196 150;
+    --on-primary: 8 26 21;
+    --accent: 98 182 133;
+    --accent-soft: 24 48 39;
+    --brand: 132 204 161;
+    --star: 240 178 54;
+    --warn: 232 176 74;
+    --warn-soft: 56 42 16;
+    --danger: 240 112 104;
+    --danger-soft: 60 24 24;
+    --info: 120 172 230;
+    --info-soft: 22 40 62;
+    color-scheme: dark;
+  }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  body {
+    @apply bg-canvas text-ink font-sans antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  h1, h2, h3, h4 {
+    @apply font-display tracking-tight text-ink;
+    font-optical-sizing: auto;
+  }
+
+  .font-sign {
+    font-variation-settings: 'wdth' 78;
+    letter-spacing: 0.01em;
+  }
+
+  :focus-visible {
+    @apply outline-none ring-2 ring-accent ring-offset-2 ring-offset-canvas;
+  }
+
+  ::selection {
+    background: rgb(var(--accent) / 0.25);
+  }
+}
+
+@layer components {
+  .container-page {
+    @apply mx-auto w-full max-w-content px-4 sm:px-6 lg:px-8;
+  }
+
+  .card {
+    @apply rounded-2xl border border-line bg-surface shadow-card;
+  }
+
+  .eyebrow {
+    @apply text-sm font-semibold text-accent;
+  }
+
+  /* Signboards hang slightly crooked and straighten when you reach for them. */
+  .signboard {
+    transform: rotate(var(--r, 0deg));
+    transition: transform 220ms cubic-bezier(0.3, 0.7, 0.4, 1), box-shadow 220ms;
+  }
+  .signboard:hover,
+  .signboard:focus-visible {
+    transform: rotate(0deg) translateY(-3px);
+  }
+
+  .input-base {
+    @apply block w-full rounded-xl border border-line bg-surface px-3.5 py-2.5 text-[15px] text-ink placeholder:text-subtle
+      transition-colors focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/25 disabled:cursor-not-allowed disabled:opacity-60;
+  }
+
+  .input-error {
+    @apply border-danger focus:border-danger focus:ring-danger/20;
+  }
+
+  .link {
+    @apply font-medium text-brand underline-offset-4 hover:underline;
+  }
+}
+
+@layer utilities {
+  .scrollbar-none {
+    scrollbar-width: none;
+  }
+  .scrollbar-none::-webkit-scrollbar {
+    display: none;
+  }
+  .pb-safe {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+  .text-balance {
+    text-wrap: balance;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
