@@ -9,6 +9,7 @@ import { EmptyState } from '../components/ui/EmptyState';
 import { Button, ButtonLink } from '../components/ui/Button';
 import { ConfirmDialog } from '../components/ui/ConfirmDialog';
 import { pluralize } from '../utils/format';
+import { Reveal } from '../components/motion/Reveal';
 
 export default function SavedPage() {
   useDocumentTitle('Saved artisans');
@@ -37,11 +38,11 @@ export default function SavedPage() {
       </div>
 
       {saved.length ? (
-        <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <Reveal stagger className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {saved.map((a) => (
             <ArtisanCard key={a.id} artisan={a} />
           ))}
-        </div>
+        </Reveal>
       ) : (
         <EmptyState
           className="mt-8"

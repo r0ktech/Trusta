@@ -1,3 +1,4 @@
+import { Reveal } from '../motion/Reveal';
 import { BadgeCheck, Images, MessageSquareText, ReceiptText } from 'lucide-react';
 
 const ITEMS = [
@@ -30,10 +31,10 @@ export function TrustStrip() {
         <h2 id="trust-heading" className="sr-only">
           What you can check before hiring
         </h2>
-        <ul className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4 lg:gap-6">
+        <Reveal as="ul" stagger className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4 lg:gap-6">
           {ITEMS.map(({ icon: Icon, title, body }) => (
-            <li key={title} className="flex gap-4 lg:flex-col lg:gap-3">
-              <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-accent-soft text-brand">
+            <li key={title} className="group flex gap-4 lg:flex-col lg:gap-3">
+              <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-accent-soft text-brand transition-transform duration-300 group-hover:-rotate-6 group-hover:scale-110">
                 <Icon className="h-5 w-5" aria-hidden="true" />
               </span>
               <div>
@@ -42,7 +43,7 @@ export function TrustStrip() {
               </div>
             </li>
           ))}
-        </ul>
+        </Reveal>
       </div>
     </section>
   );

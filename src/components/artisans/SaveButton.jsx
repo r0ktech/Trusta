@@ -16,13 +16,14 @@ export function SaveButton({ artisan, className, withLabel = false }) {
       aria-pressed={saved}
       aria-label={withLabel ? undefined : saved ? `Remove ${artisan.name} from saved` : `Save ${artisan.name}`}
       className={cn(
-        'inline-flex items-center justify-center gap-2 rounded-xl border font-semibold transition-colors',
+        'inline-flex items-center justify-center gap-2 rounded-xl border font-semibold transition-[color,background-color,border-color,transform] active:scale-90',
         withLabel ? 'h-11 px-4 text-[15px]' : 'h-10 w-10',
         saved ? 'border-danger/30 bg-danger-soft text-danger' : 'border-line bg-surface text-muted hover:text-ink hover:bg-surface2',
         className,
       )}
     >
-      <Heart className="h-[18px] w-[18px]" fill={saved ? 'currentColor' : 'none'} aria-hidden="true" />
+      {/* Keyed on state so the heart pops each time it's saved. */}
+      <Heart key={String(saved)} className={cn('h-[18px] w-[18px]', saved && 'animate-pop')} fill={saved ? 'currentColor' : 'none'} aria-hidden="true" />
       {withLabel && (saved ? 'Saved' : 'Save')}
     </button>
   );

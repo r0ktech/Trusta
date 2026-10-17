@@ -10,6 +10,7 @@ import {
 } from '../components/home/HomeSections';
 import { SectionHeading } from '../components/home/SectionHeading';
 import { Accordion } from '../components/ui/Accordion';
+import { Reveal } from '../components/motion/Reveal';
 import { FAQS } from '../data/faqs';
 import { useDocumentTitle } from '../hooks/useDocumentTitle';
 
@@ -34,7 +35,9 @@ export default function HomePage() {
             action={{ to: '/how-it-works#faq', label: 'All FAQs' }}
             className="sm:flex-col sm:items-start lg:sticky lg:top-24 lg:self-start"
           />
-          <Accordion items={FAQS.slice(0, 5)} defaultOpen="verification" />
+          <Reveal>
+            <Accordion items={FAQS.slice(0, 5)} defaultOpen="verification" />
+          </Reveal>
         </div>
       </section>
     </>

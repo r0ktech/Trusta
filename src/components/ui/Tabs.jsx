@@ -23,7 +23,7 @@ export function Tabs({ tabs, value, onChange, className, label = 'Sections' }) {
             onClick={() => onChange(t.value)}
             onKeyDown={(e) => onKeyDown(e, i)}
             className={cn(
-              '-mb-px flex shrink-0 items-center gap-2 whitespace-nowrap border-b-2 px-3 py-2.5 text-sm font-semibold transition-colors',
+              '-mb-px flex shrink-0 items-center gap-2 whitespace-nowrap border-b-2 px-3 py-2.5 text-sm font-semibold transition-colors duration-200',
               active ? 'border-primary text-ink' : 'border-transparent text-muted hover:text-ink',
             )}
           >

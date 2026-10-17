@@ -20,7 +20,7 @@ export function ArtisanCard({ artisan, layout = 'grid', className }) {
 
   if (layout === 'list') {
     return (
-      <article className={cn('card group relative flex flex-col gap-4 p-4 transition-shadow hover:shadow-lift sm:flex-row sm:items-center sm:p-5', className)}>
+      <article className={cn('card card-lift group relative flex flex-col gap-4 p-4 hover:shadow-lift sm:flex-row sm:items-center sm:p-5', className)}>
         <div className="flex min-w-0 flex-1 gap-4">
           <Avatar name={artisan.name} src={artisan.profileImage} size="lg" />
           <div className="min-w-0 flex-1">
@@ -72,8 +72,8 @@ export function ArtisanCard({ artisan, layout = 'grid', className }) {
   }
 
   return (
-    <article className={cn('card group relative flex flex-col overflow-hidden transition-shadow hover:shadow-lift', className)}>
-      <div className="grid grid-cols-3 gap-0.5 bg-line" aria-hidden="true">
+    <article className={cn('card card-lift group relative flex flex-col overflow-hidden hover:shadow-lift', className)}>
+      <div className="grid grid-cols-3 gap-0.5 bg-line [&>*>*]:transition-transform [&>*>*]:duration-500 group-hover:[&>*>*]:scale-[1.06]" aria-hidden="true">
         {(artisan.portfolio?.length ? artisan.portfolio : [{ id: `${artisan.id}-x`, title: '', tone: 0 }]).slice(0, 3).map((p, i, arr) => (
           <WorkSampleTile
             key={p.id}

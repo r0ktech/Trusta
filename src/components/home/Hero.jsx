@@ -24,25 +24,29 @@ export function Hero() {
 
   return (
     <section className="relative overflow-hidden border-b border-line">
+      <div
+        className="pointer-events-none absolute -right-32 -top-40 h-[28rem] w-[28rem] animate-drift rounded-full bg-accent/10 blur-3xl"
+        aria-hidden="true"
+      />
       <div className="container-page relative grid grid-cols-1 items-center gap-10 pb-14 pt-10 sm:pt-14 lg:grid-cols-[1fr_1.05fr] lg:gap-14 lg:pb-20 lg:pt-16">
         <div>
-          <h1 className="text-balance font-display text-[2.75rem] font-extrabold leading-[0.98] tracking-[-0.035em] sm:text-6xl lg:text-[4.25rem]">
+          <h1 className="animate-rise text-balance font-display text-[2.75rem] font-extrabold leading-[0.98] tracking-[-0.035em] sm:text-6xl lg:text-[4.25rem]">
             Find trusted artisans near you.
           </h1>
-          <p className="mt-6 max-w-[34rem] text-lg leading-relaxed text-muted">
+          <p className="mt-6 max-w-[34rem] animate-rise text-lg leading-relaxed text-muted [animation-delay:120ms]">
             Compare electricians, plumbers, tailors, mechanics and more in Awka, Enugu, Lagos and Abuja by their past work, what customers say and what they
             charge.
           </p>
 
-          <div className="mt-8">
+          <div className="mt-8 animate-rise [animation-delay:240ms]">
             <HeroSearch />
           </div>
 
-          <div className="mt-5 flex flex-wrap items-center gap-x-3 gap-y-1">
+          <div className="mt-5 flex animate-rise flex-wrap items-center gap-x-3 gap-y-1 [animation-delay:360ms]">
             <p className="text-sm text-muted">Do you work with your hands?</p>
-            <ButtonLink to="/become-a-provider" variant="ghost" size="sm" className="-ml-1 text-brand">
+            <ButtonLink to="/become-a-provider" variant="ghost" size="sm" className="group -ml-1 text-brand">
               Become a Provider
-              <ArrowRight className="h-4 w-4" aria-hidden="true" />
+              <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
             </ButtonLink>
           </div>
         </div>
@@ -86,9 +90,9 @@ export function Hero() {
             ))}
           </div>
 
-          <Link to="/categories" className="mt-2 inline-flex items-center gap-1 text-sm font-semibold text-brand hover:underline lg:mt-8">
+          <Link to="/categories" className="group mt-2 inline-flex items-center gap-1 text-sm font-semibold text-brand hover:underline lg:mt-8">
             See all 14 trades
-            <ArrowRight className="h-4 w-4" aria-hidden="true" />
+            <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
           </Link>
         </div>
       </div>

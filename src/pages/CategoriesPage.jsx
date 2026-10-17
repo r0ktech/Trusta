@@ -7,6 +7,7 @@ import { CategoryCard, tiltFor } from '../components/home/CategoryCard';
 import { Input } from '../components/ui/Field';
 import { EmptyState } from '../components/ui/EmptyState';
 import { Button } from '../components/ui/Button';
+import { Reveal } from '../components/motion/Reveal';
 
 export default function CategoriesPage() {
   useDocumentTitle('Service categories');
@@ -50,11 +51,11 @@ export default function CategoriesPage() {
       </div>
 
       {list.length ? (
-        <div className="mt-10 grid grid-cols-2 gap-x-4 gap-y-9 sm:grid-cols-3 sm:gap-x-6 lg:grid-cols-4">
+        <Reveal stagger className="mt-10 grid grid-cols-2 gap-x-4 gap-y-9 sm:grid-cols-3 sm:gap-x-6 lg:grid-cols-4">
           {list.map((c, i) => (
             <CategoryCard key={c.id} category={c} count={counts[c.id] ?? 0} tilt={tiltFor(i)} />
           ))}
-        </div>
+        </Reveal>
       ) : (
         <EmptyState icon={Search} className="mt-8" title="No matching category" description={`Nothing matches “${q}”. Try a broader word like “repair” or “clean”.`}>
           <Button variant="secondary" onClick={() => setQ('')}>

@@ -19,6 +19,7 @@ import { FAQS } from '../data/faqs';
 import { Accordion } from '../components/ui/Accordion';
 import { ButtonLink } from '../components/ui/Button';
 import { Tabs } from '../components/ui/Tabs';
+import { Reveal } from '../components/motion/Reveal';
 
 const CUSTOMER_STEPS = [
   { icon: Compass, title: 'Discover local service providers', body: 'Search by service and choose your city. Browse providers who list your area in their coverage.' },
@@ -51,9 +52,9 @@ const LIMITS = [
 
 function Steps({ steps }) {
   return (
-    <ol className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+    <Reveal as="ol" stagger className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
       {steps.map(({ icon: Icon, title, body }, i) => (
-        <li key={title} className="card flex gap-4 p-5">
+        <li key={title} className="card card-lift flex gap-4 p-5 hover:shadow-lift">
           <div className="flex flex-col items-center">
             <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-accent-soft text-brand">
               <Icon className="h-5 w-5" aria-hidden="true" />
@@ -66,7 +67,7 @@ function Steps({ steps }) {
           </div>
         </li>
       ))}
-    </ol>
+    </Reveal>
   );
 }
 
@@ -148,19 +149,19 @@ export default function HowItWorksPage() {
         <h2 id="trust-signals-heading" className="text-2xl font-extrabold sm:text-3xl">
           Reading a profile
         </h2>
-        <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-3">
+        <Reveal stagger className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-3">
           {[
             [Star, 'Ratings & distribution', 'Look beyond the average. A spread of honest 4s and 5s across many jobs often says more than a perfect score from two.'],
             [Images, 'Work samples', 'Check whether past jobs match the kind and size of work you need.'],
             [MessageSquareText, 'Review details', 'Reviews show the service and date, so you can see recent, relevant feedback.'],
           ].map(([Icon, t, b]) => (
-            <div key={t} className="rounded-2xl border border-line p-5">
+            <div key={t} className="card-lift rounded-2xl border border-line p-5 hover:border-accent/40 hover:shadow-card">
               <Icon className="h-5 w-5 text-accent" aria-hidden="true" />
               <h3 className="mt-3 font-bold">{t}</h3>
               <p className="mt-1 text-sm text-muted">{b}</p>
             </div>
           ))}
-        </div>
+        </Reveal>
       </section>
 
       <section id="faq" className="scroll-mt-24 border-t border-line py-12 sm:py-16" aria-labelledby="faq-h">

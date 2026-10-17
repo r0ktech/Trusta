@@ -33,6 +33,7 @@ export function SkipLink() {
 }
 
 export function MainLayout({ hideFooter = false }) {
+  const { pathname } = useLocation();
   return (
     <div className="flex min-h-screen flex-col pb-16 md:pb-0">
       <SkipLink />
@@ -40,7 +41,10 @@ export function MainLayout({ hideFooter = false }) {
       <Navbar />
       <main id="main" className="flex flex-1 flex-col">
         <Suspense fallback={<PageLoader />}>
-          <Outlet />
+          {/* Keyed by path so each page eases in on navigation. */}
+          <div key={pathname} className="flex flex-1 animate-page-in flex-col">
+            <Outlet />
+          </div>
         </Suspense>
       </main>
       {!hideFooter && <Footer />}

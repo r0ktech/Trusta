@@ -24,6 +24,7 @@ import { Button } from '../components/ui/Button';
 import { Select } from '../components/ui/Field';
 import { EmptyState } from '../components/ui/EmptyState';
 import { cn, pluralize } from '../utils/format';
+import { Reveal } from '../components/motion/Reveal';
 
 const PAGE_SIZE = 9;
 
@@ -218,11 +219,11 @@ export default function ExplorePage() {
               <NoResults filters={filters} onClear={clearAll} onRemoveLocation={() => update({ location: '' })} />
             ) : (
               <>
-                <div className={cn('mt-5 grid gap-4', layout === 'grid' ? 'sm:grid-cols-2 xl:grid-cols-3' : 'grid-cols-1')}>
+                <Reveal stagger className={cn('mt-5 grid gap-4', layout === 'grid' ? 'sm:grid-cols-2 xl:grid-cols-3' : 'grid-cols-1')}>
                   {shown.map((a) => (
                     <ArtisanCard key={a.id} artisan={a} layout={layout === 'list' ? 'list' : 'grid'} />
                   ))}
-                </div>
+                </Reveal>
                 <div className="mt-8 flex flex-col items-center gap-3">
                   <p className="text-sm text-muted">
                     Showing {shown.length} of {results.length}
