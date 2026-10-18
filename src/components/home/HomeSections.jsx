@@ -11,9 +11,11 @@ import { Avatar } from '../ui/Avatar';
 import { Tabs } from '../ui/Tabs';
 import { CategoryIcon } from '../artisans/CategoryIcon';
 import { AdirePattern } from '../ui/AdirePattern';
+import { Reveal } from '../ui/Motion';
+import { useInView } from '../../hooks/useInView';
 import { VerificationBadge } from '../artisans/VerificationBadge';
 import { getCategory } from '../../data/categories';
-import { formatDate, pluralize } from '../../utils/format';
+import { cn, formatDate, pluralize } from '../../utils/format';
 
 export function PopularCategories() {
   const artisans = useArtisans();
@@ -32,7 +34,7 @@ export function PopularCategories() {
       />
       <div className="mt-10 grid grid-cols-2 gap-x-4 gap-y-8 sm:grid-cols-3 sm:gap-x-6 lg:grid-cols-4">
         {popular.slice(0, 8).map((c, i) => (
-          <CategoryCard key={c.id} category={c} count={counts[c.id] ?? 0} tilt={tiltFor(i)} />
+          <CategoryCard key={c.id} category={c} count={counts[c.id] ?? 0} tilt={tiltFor(i)} delay={(i % 4) * 90} />
         ))}
       </div>
     </section>
@@ -59,8 +61,10 @@ export function RecommendedArtisans() {
           action={{ to: '/explore?sort=rating', label: 'See all providers' }}
         />
         <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {picks.map((a) => (
-            <ArtisanCard key={a.id} artisan={a} />
+          {picks.map((a, i) => (
+            <Reveal key={a.id} delay={(i % 3) * 90} className="flex">
+              <ArtisanCard artisan={a} className="w-full" />
+            </Reveal>
           ))}
         </div>
       </div>
@@ -87,6 +91,9 @@ const STEPS = [
 ];
 
 export function HowItWorksSteps() {
+  // Steps light up in order; the line to the next step draws once each one lands.
+  const [ref, inView] = useInView({ threshold: 0.35 });
+  const STEP_GAP = 380;
   return (
     <section aria-labelledby="how-heading" className="container-page py-16 sm:py-20">
       <SectionHeading
@@ -94,18 +101,31 @@ export function HowItWorksSteps() {
         title="Hiring without the guesswork"
         action={{ to: '/how-it-works', label: 'Learn more' }}
       />
-      <ol className="mt-10 grid grid-cols-1 gap-6 md:grid-cols-3 md:gap-0">
+      <ol ref={ref} className="mt-10 grid grid-cols-1 gap-6 md:grid-cols-3 md:gap-0">
         {STEPS.map(({ icon: Icon, title, body }, i) => (
           <li key={title} className="relative md:px-6 md:first:pl-0 md:last:pr-0">
-            {i < STEPS.length - 1 && <div className="absolute left-[3.25rem] right-0 top-6 hidden h-px bg-line md:block" aria-hidden="true" />}
+            {i < STEPS.length - 1 && (
+              <div className="absolute left-[3.25rem] right-0 top-6 hidden h-px bg-line md:block" aria-hidden="true">
+                <div
+                  className="h-full origin-left bg-accent transition-transform duration-500 ease-out"
+                  style={{ transform: inView ? 'scaleX(1)' : 'scaleX(0)', transitionDelay: `${i * STEP_GAP + 260}ms` }}
+                />
+              </div>
+            )}
             <div className="flex items-start gap-4 md:block">
-              <span className="relative flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl border border-line bg-surface text-brand shadow-card">
+              <span
+                className={cn(
+                  'relative flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl border border-line bg-surface text-brand shadow-card',
+                  inView ? 'animate-pop' : 'opacity-0',
+                )}
+                style={{ animationDelay: `${i * STEP_GAP}ms` }}
+              >
                 <Icon className="h-5 w-5" aria-hidden="true" />
                 <span className="absolute -right-1.5 -top-1.5 flex h-5 w-5 items-center justify-center rounded-full bg-primary text-[11px] font-bold text-on-primary">
                   {i + 1}
                 </span>
               </span>
-              <div className="md:mt-5">
+              <div className={cn('md:mt-5', inView ? 'animate-rise' : 'opacity-0')} style={{ animationDelay: `${i * STEP_GAP + 120}ms` }}>
                 <h3 className="text-lg font-bold">{title}</h3>
                 <p className="mt-1.5 text-muted">{body}</p>
               </div>
@@ -127,7 +147,7 @@ const PROVIDER_BENEFITS = [
 export function ProviderCTA() {
   return (
     <section aria-labelledby="provider-cta-heading" className="container-page pb-16 sm:pb-20">
-      <div className="relative overflow-hidden rounded-3xl bg-forest px-6 py-10 text-white sm:px-10 sm:py-14 lg:px-14">
+      <Reveal className="relative overflow-hidden rounded-3xl bg-forest px-6 py-10 text-white sm:px-10 sm:py-14 lg:px-14">
         <div className="absolute inset-0 opacity-60 [mask-image:linear-gradient(100deg,transparent_35%,black_85%)]" aria-hidden="true">
           <AdirePattern color="#1D5446" motif="stitch" scale={1.2} />
         </div>
@@ -185,7 +205,7 @@ export function ProviderCTA() {
             </div>
           </div>
         </div>
-      </div>
+      </Reveal>
     </section>
   );
 }
@@ -218,8 +238,8 @@ export function NearbyServices() {
           onChange={setCity}
         />
         <ul className="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3" role="tabpanel" aria-label={`Services in ${city}`}>
-          {services.map(({ category, count, top }) => (
-            <li key={category.id}>
+          {services.map(({ category, count, top }, i) => (
+            <li key={`${city}-${category.id}`} className="animate-rise" style={{ animationDelay: `${i * 45}ms` }}>
               <Link
                 to={`/explore?category=${category.id}&location=${encodeURIComponent(city)}`}
                 className="group flex items-center gap-4 rounded-2xl border border-line p-4 transition-colors hover:border-accent/40 hover:bg-surface2/50"
@@ -267,8 +287,8 @@ export function RecentlyAdded() {
         action={{ to: '/explore?sort=newest', label: 'See newest' }}
       />
       <ul className="mt-8 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
-        {recent.map((a) => (
-          <li key={a.id}>
+        {recent.map((a, i) => (
+          <Reveal as="li" key={a.id} delay={i * 80}>
             <Link to={`/artisan/${a.id}`} className="card flex h-full flex-col p-4 transition-shadow hover:shadow-lift">
               <div className="flex items-center gap-3">
                 <Avatar name={a.name} size="sm" />
@@ -284,7 +304,7 @@ export function RecentlyAdded() {
                 <span className="text-xs text-subtle">Joined {formatDate(a.joinedAt, { month: 'short', year: 'numeric' })}</span>
               </div>
             </Link>
-          </li>
+          </Reveal>
         ))}
       </ul>
     </section>

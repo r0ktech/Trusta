@@ -2,10 +2,10 @@ import { Signboard } from './Signboard';
 import { cn } from '../../utils/format';
 
 // A signboard with a plain-language caption underneath.
-export function CategoryCard({ category, count, tilt = 0, className }) {
+export function CategoryCard({ category, count, tilt = 0, delay = 0, className }) {
   return (
     <div className={cn('flex flex-col', className)}>
-      <Signboard category={category} count={count} tilt={tilt} className="min-h-[8.75rem]" />
+      <Signboard category={category} count={count} tilt={tilt} settle="view" delay={delay} className="min-h-[8.75rem]" />
       <p className="mt-3 px-0.5 text-sm leading-relaxed text-muted">{category.description}</p>
     </div>
   );

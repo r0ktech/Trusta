@@ -1,4 +1,5 @@
 import { BadgeCheck, Images, MessageSquareText, ReceiptText } from 'lucide-react';
+import { Reveal } from '../ui/Motion';
 
 const ITEMS = [
   {
@@ -31,8 +32,8 @@ export function TrustStrip() {
           What you can check before hiring
         </h2>
         <ul className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4 lg:gap-6">
-          {ITEMS.map(({ icon: Icon, title, body }) => (
-            <li key={title} className="flex gap-4 lg:flex-col lg:gap-3">
+          {ITEMS.map(({ icon: Icon, title, body }, i) => (
+            <Reveal as="li" key={title} delay={i * 90} className="flex gap-4 lg:flex-col lg:gap-3">
               <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-accent-soft text-brand">
                 <Icon className="h-5 w-5" aria-hidden="true" />
               </span>
@@ -40,7 +41,7 @@ export function TrustStrip() {
                 <h3 className="text-[15px] font-bold">{title}</h3>
                 <p className="mt-1 text-sm leading-relaxed text-muted">{body}</p>
               </div>
-            </li>
+            </Reveal>
           ))}
         </ul>
       </div>

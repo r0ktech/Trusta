@@ -1,20 +1,26 @@
 import { Link } from 'react-router-dom';
+import { useInView } from '../../hooks/useInView';
 import { CategoryIcon } from '../artisans/CategoryIcon';
 import { tone } from '../ui/tones';
 import { cn, pluralize } from '../../utils/format';
 
 // A hand-painted shop sign, the way artisans advertise on Nigerian streets.
 // Each board links to that category on the explore page.
-export function Signboard({ category, count, tilt = 0, delay = 0, size = 'md', settle = false, className, to }) {
+// `settle`: 'load' hangs the board as the page opens; 'view' waits until it scrolls into sight.
+export function Signboard({ category, count, tilt = 0, delay = 0, size = 'md', settle, className, to }) {
   const t = tone(category.tone);
+  const [ref, inView] = useInView({ threshold: 0.3 });
+  const hang = settle === 'view' ? inView : !!settle;
   return (
     <Link
+      ref={ref}
       to={to ?? `/explore?category=${category.id}`}
       aria-label={`${category.name}: ${category.board}${count != null ? `, ${pluralize(count, 'provider')}` : ''}`}
       style={{ '--r': `${tilt}deg`, backgroundColor: t.board, color: t.ink, animationDelay: `${delay}ms` }}
       className={cn(
         'signboard group relative flex flex-col rounded-md p-1.5 shadow-board',
-        settle && 'animate-hang',
+        hang && 'animate-hang',
+        settle === 'view' && !inView && 'opacity-0',
         className,
       )}
     >

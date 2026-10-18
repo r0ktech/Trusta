@@ -7,6 +7,8 @@ import { Signboard } from './Signboard';
 import { CATEGORY_MAP } from '../../data/categories';
 import { useArtisans } from '../../hooks/useArtisans';
 
+const HEADLINE = 'Find trusted artisans near you.';
+
 // The boards on the wall, with how crooked each one hangs.
 const WALL = [
   ['electrician', -2.2],
@@ -26,19 +28,29 @@ export function Hero() {
     <section className="relative overflow-hidden border-b border-line">
       <div className="container-page relative grid grid-cols-1 items-center gap-10 pb-14 pt-10 sm:pt-14 lg:grid-cols-[1fr_1.05fr] lg:gap-14 lg:pb-20 lg:pt-16">
         <div>
-          <h1 className="text-balance font-display text-[2.75rem] font-extrabold leading-[0.98] tracking-[-0.035em] sm:text-6xl lg:text-[4.25rem]">
-            Find trusted artisans near you.
+          <h1
+            aria-label={HEADLINE}
+            className="text-balance font-display text-[2.75rem] font-extrabold leading-[1.02] tracking-[-0.035em] sm:text-6xl lg:text-[4.25rem]"
+          >
+            {HEADLINE.split(' ').map((word, i, words) => (
+              <span key={i} aria-hidden="true" className="-mb-[0.12em] inline-block overflow-hidden pb-[0.12em] align-bottom">
+                <span className="inline-block animate-word-up" style={{ animationDelay: `${i * 70}ms` }}>
+                  {word}
+                </span>
+                {i < words.length - 1 && '\u00a0'}
+              </span>
+            ))}
           </h1>
-          <p className="mt-6 max-w-[34rem] text-lg leading-relaxed text-muted">
+          <p className="mt-6 max-w-[34rem] animate-rise text-lg leading-relaxed text-muted [animation-delay:320ms]">
             Compare electricians, plumbers, tailors, mechanics and more in Awka, Enugu, Lagos and Abuja by their past work, what customers say and what they
             charge.
           </p>
 
-          <div className="mt-8">
+          <div className="mt-8 animate-rise [animation-delay:420ms]">
             <HeroSearch />
           </div>
 
-          <div className="mt-5 flex flex-wrap items-center gap-x-3 gap-y-1">
+          <div className="mt-5 flex animate-rise flex-wrap items-center gap-x-3 gap-y-1 [animation-delay:520ms]">
             <p className="text-sm text-muted">Do you work with your hands?</p>
             <ButtonLink to="/become-a-provider" variant="ghost" size="sm" className="-ml-1 text-brand">
               Become a Provider
@@ -63,7 +75,7 @@ export function Hero() {
                       tilt={tilt}
                       size="lg"
                       settle
-                      delay={120 + i * 90}
+                      delay={480 + i * 90}
                       className="min-h-[9.5rem]"
                     />
                   ))}
@@ -80,7 +92,7 @@ export function Hero() {
                 count={counts[category.id] ?? 0}
                 tilt={tilt * 0.6}
                 settle
-                delay={80 + i * 70}
+                delay={560 + i * 70}
                 className="min-h-[8.5rem] w-44 shrink-0 snap-start"
               />
             ))}
