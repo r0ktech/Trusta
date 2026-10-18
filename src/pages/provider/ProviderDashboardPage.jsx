@@ -8,6 +8,7 @@ import { useToast } from '../../context/ToastContext';
 import { useDocumentTitle } from '../../hooks/useDocumentTitle';
 import { LOCAL_PROVIDER_ID } from '../../data/seeds';
 import { Toggle } from '../../components/ui/Toggle';
+import { CountUp, GrowBar } from '../../components/ui/Motion';
 import { DemoTag } from '../../components/ui/Badge';
 import { EmptyState } from '../../components/ui/EmptyState';
 import { Skeleton } from '../../components/ui/Skeleton';
@@ -46,7 +47,9 @@ function Metric({ icon: Icon, label, value, note, demo }) {
         {demo && <DemoTag>Illustrative</DemoTag>}
       </div>
       <p className="mt-3 text-sm text-muted">{label}</p>
-      <p className="font-display text-2xl font-extrabold text-ink">{value}</p>
+      <p className="font-display text-2xl font-extrabold text-ink">
+        <CountUp value={value} />
+      </p>
       {note && <p className="mt-0.5 text-xs text-subtle">{note}</p>}
     </div>
   );
@@ -178,7 +181,7 @@ export default function ProviderDashboardPage() {
               <span className="font-display text-lg font-extrabold text-brand">{completion.percent}%</span>
             </div>
             <div className="mt-3 h-2 overflow-hidden rounded-full bg-surface2" role="progressbar" aria-valuenow={completion.percent} aria-valuemin={0} aria-valuemax={100} aria-labelledby="complete-h">
-              <div className="h-full rounded-full bg-accent transition-all" style={{ width: `${completion.percent}%` }} />
+              <GrowBar percent={completion.percent} className="bg-accent" />
             </div>
             <ul className="mt-4 space-y-2.5">
               {completion.items.map((item) => (

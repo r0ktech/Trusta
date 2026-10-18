@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { Link } from 'react-router-dom';
-import { ArrowLeft, MailCheck } from 'lucide-react';
+import { ArrowLeft } from 'lucide-react';
+import { SuccessCheck } from '../../components/ui/Motion';
 import { useDocumentTitle } from '../../hooks/useDocumentTitle';
 import { AuthShell } from '../../components/forms/AuthShell';
 import { Field, Input } from '../../components/ui/Field';
@@ -35,9 +36,7 @@ export default function ResetPasswordPage() {
     >
       {sentTo ? (
         <div className="rounded-2xl border border-line p-5 text-center" role="status">
-          <span className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-accent-soft text-brand">
-            <MailCheck className="h-6 w-6" aria-hidden="true" />
-          </span>
+          <SuccessCheck />
           <p className="mt-4 text-sm text-ink">
             In the live product, a reset link would be sent to <span className="font-semibold">{sentTo}</span>.
           </p>

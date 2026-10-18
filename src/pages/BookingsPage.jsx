@@ -16,6 +16,7 @@ import { EmptyState } from '../components/ui/EmptyState';
 import { ButtonLink } from '../components/ui/Button';
 import { Avatar } from '../components/ui/Avatar';
 import { Notice } from '../components/ui/Notice';
+import { CountUp } from '../components/ui/Motion';
 import { getCategory } from '../data/categories';
 import { cn, formatRelative, todayISO } from '../utils/format';
 
@@ -76,7 +77,9 @@ export default function BookingsPage() {
         {Object.entries(STATUS_META).map(([status, meta]) => (
           <li key={status} className="card p-4">
             <p className="text-sm text-muted">{meta.label}</p>
-            <p className="mt-1 font-display text-2xl font-extrabold text-ink">{counts[status] ?? 0}</p>
+            <p className="mt-1 font-display text-2xl font-extrabold text-ink">
+              <CountUp value={counts[status] ?? 0} duration={600} />
+            </p>
           </li>
         ))}
       </ul>

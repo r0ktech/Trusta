@@ -218,9 +218,12 @@ export default function ExplorePage() {
               <NoResults filters={filters} onClear={clearAll} onRemoveLocation={() => update({ location: '' })} />
             ) : (
               <>
-                <div className={cn('mt-5 grid gap-4', layout === 'grid' ? 'sm:grid-cols-2 xl:grid-cols-3' : 'grid-cols-1')}>
-                  {shown.map((a) => (
-                    <ArtisanCard key={a.id} artisan={a} layout={layout === 'list' ? 'list' : 'grid'} />
+                {/* Keyed on the filters so new results rise in; load-more only animates the new page. */}
+                <div key={`${paramsKey}-${layout}`} className={cn('mt-5 grid grid-cols-1 gap-4', layout === 'grid' && 'sm:grid-cols-2 xl:grid-cols-3')}>
+                  {shown.map((a, i) => (
+                    <div key={a.id} className="flex animate-rise" style={{ animationDelay: `${Math.min(i % PAGE_SIZE, 8) * 45}ms` }}>
+                      <ArtisanCard artisan={a} layout={layout === 'list' ? 'list' : 'grid'} className="w-full" />
+                    </div>
                   ))}
                 </div>
                 <div className="mt-8 flex flex-col items-center gap-3">

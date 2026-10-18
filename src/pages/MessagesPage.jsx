@@ -149,9 +149,14 @@ function Thread({ conversation, onBack, onSend, onDelete }) {
   const { toast } = useToast();
   const endRef = useRef(null);
   const inputRef = useRef(null);
+  // Only messages sent after opening the thread animate; history appears still.
+  const [openedAt] = useState(() => new Date().toISOString());
 
+  const scrolledOnce = useRef(false);
   useEffect(() => {
-    endRef.current?.scrollIntoView({ block: 'end' });
+    // Jump to the latest message on open; glide when a new one arrives.
+    endRef.current?.scrollIntoView({ block: 'end', behavior: scrolledOnce.current ? 'smooth' : 'auto' });
+    scrolledOnce.current = true;
   }, [conversation.messages.length]);
 
   const groups = useMemo(() => {
@@ -236,7 +241,7 @@ function Thread({ conversation, onBack, onSend, onDelete }) {
               {g.items.map((m) => {
                 const mine = m.sender === 'me';
                 return (
-                  <li key={m.id} className={cn('flex', mine ? 'justify-end' : 'justify-start')}>
+                  <li key={m.id} className={cn('flex', mine ? 'justify-end' : 'justify-start', m.sentAt > openedAt && cn('animate-bubble-in', mine ? 'origin-bottom-right' : 'origin-bottom-left'))}>
                     <div
                       className={cn(
                         'max-w-[82%] rounded-2xl px-3.5 py-2 text-[15px] leading-snug sm:max-w-[70%]',

@@ -52,7 +52,7 @@ export default function CategoriesPage() {
       {list.length ? (
         <div className="mt-10 grid grid-cols-2 gap-x-4 gap-y-9 sm:grid-cols-3 sm:gap-x-6 lg:grid-cols-4">
           {list.map((c, i) => (
-            <CategoryCard key={c.id} category={c} count={counts[c.id] ?? 0} tilt={tiltFor(i)} />
+            <CategoryCard key={c.id} category={c} count={counts[c.id] ?? 0} tilt={tiltFor(i)} delay={(i % 4) * 90} />
           ))}
         </div>
       ) : (

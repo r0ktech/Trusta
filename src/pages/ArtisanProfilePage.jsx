@@ -39,13 +39,14 @@ import { CONTACT_LABELS, PRICING_LABELS, formatDate, formatNaira, formatPrice, c
 import { shareOrCopy } from '../utils/share';
 import { AdirePattern } from '../components/ui/AdirePattern';
 import { tone } from '../components/ui/tones';
+import { Reveal } from '../components/ui/Motion';
 
 const ALL_DAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 const REVIEWS_STEP = 5;
 
 function Section({ id, title, children, action }) {
   return (
-    <section aria-labelledby={id} className="card p-5 sm:p-6">
+    <Reveal as="section" aria-labelledby={id} className="card p-5 sm:p-6">
       <div className="mb-4 flex items-center justify-between gap-3">
         <h2 id={id} className="text-lg font-bold">
           {title}
@@ -53,7 +54,7 @@ function Section({ id, title, children, action }) {
         {action}
       </div>
       {children}
-    </section>
+    </Reveal>
   );
 }
 
@@ -399,7 +400,7 @@ function Profile({ artisan }) {
           <Button variant="secondary" onClick={message} aria-label="Send message" className="px-3.5">
             <MessageCircle className="h-5 w-5" aria-hidden="true" />
           </Button>
-          <Button block onClick={() => setBookingOpen(true)}>
+          <Button className="min-w-0 flex-1" onClick={() => setBookingOpen(true)}>
             <CalendarCheck className="h-[18px] w-[18px]" aria-hidden="true" />
             Request a Booking
           </Button>
