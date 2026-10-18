@@ -1,4 +1,5 @@
 import { Stars } from '../ui/StarRating';
+import { GrowBar } from '../ui/Motion';
 import { summarizeReviews } from '../../utils/filters';
 import { cn } from '../../utils/format';
 
@@ -31,7 +32,7 @@ export function ReviewSummary({ reviews, activeRating, onSelectRating, className
               >
                 <span className="w-3 text-right font-medium text-muted">{star}</span>
                 <span className="h-2 flex-1 overflow-hidden rounded-full bg-surface2" aria-hidden="true">
-                  <span className="block h-full rounded-full bg-star" style={{ width: `${pct}%` }} />
+                  <GrowBar percent={pct} delay={(5 - star) * 70} className="bg-star" />
                 </span>
                 <span className="w-8 text-right tabular-nums text-subtle">{n}</span>
               </button>

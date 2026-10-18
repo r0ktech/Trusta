@@ -32,6 +32,17 @@ export function SkipLink() {
   );
 }
 
+// A short fade between routes. Keyed on pathname only, so filter changes
+// within a page (query strings) don't replay it.
+export function PageTransition({ children }) {
+  const { pathname } = useLocation();
+  return (
+    <div key={pathname} className="flex flex-1 animate-page-in flex-col">
+      {children}
+    </div>
+  );
+}
+
 export function MainLayout({ hideFooter = false }) {
   return (
     <div className="flex min-h-screen flex-col pb-16 md:pb-0">
@@ -40,7 +51,9 @@ export function MainLayout({ hideFooter = false }) {
       <Navbar />
       <main id="main" className="flex flex-1 flex-col">
         <Suspense fallback={<PageLoader />}>
-          <Outlet />
+          <PageTransition>
+            <Outlet />
+          </PageTransition>
         </Suspense>
       </main>
       {!hideFooter && <Footer />}

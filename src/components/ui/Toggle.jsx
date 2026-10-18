@@ -19,14 +19,14 @@ export function Toggle({ checked, onChange, label, description, disabled, classN
         disabled={disabled}
         onClick={() => onChange(!checked)}
         className={cn(
-          'relative inline-flex h-7 w-12 shrink-0 items-center rounded-full transition-colors disabled:opacity-50',
+          'relative inline-flex h-7 w-12 shrink-0 items-center rounded-full transition-colors duration-200 disabled:opacity-50',
           checked ? 'bg-primary' : 'bg-line',
         )}
       >
         <span className="sr-only">{label}</span>
         <span
           className={cn(
-            'inline-block h-5 w-5 rounded-full bg-white shadow transition-transform',
+            'inline-block h-5 w-5 rounded-full bg-white shadow transition-transform duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)]',
             checked ? 'translate-x-6' : 'translate-x-1',
           )}
         />

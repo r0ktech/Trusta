@@ -97,7 +97,7 @@ export function ServiceSearchInput({ value, onChange, onSelect, placeholder = 'W
         <ul
           id={listId}
           role="listbox"
-          className="absolute left-0 right-0 top-full z-30 mt-2 max-h-80 overflow-y-auto rounded-2xl border border-line bg-surface p-1.5 shadow-pop sm:min-w-[22rem]"
+          className="absolute left-0 right-0 top-full z-30 mt-2 max-h-80 origin-top animate-slide-up overflow-y-auto rounded-2xl border border-line bg-surface p-1.5 shadow-pop sm:min-w-[22rem]"
         >
           {suggestions.map((s, i) => (
             <li

@@ -24,7 +24,7 @@ const SIZES = {
 
 export const buttonClasses = ({ variant = 'primary', size = 'md', block = false, className } = {}) =>
   cn(
-    'inline-flex shrink-0 items-center justify-center font-semibold transition-[background-color,color,border-color,filter,box-shadow] duration-150',
+    'inline-flex shrink-0 items-center justify-center font-semibold transition-[background-color,color,border-color,filter,box-shadow,transform] duration-150 active:scale-[0.97]',
     'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-canvas',
     'disabled:pointer-events-none disabled:opacity-50',
     VARIANTS[variant],

@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { Link } from 'react-router-dom';
-import { CalendarCheck, CheckCircle2 } from 'lucide-react';
+import { CalendarCheck } from 'lucide-react';
+import { SuccessCheck } from '../ui/Motion';
 import { Modal } from '../ui/Modal';
 import { Button, ButtonLink } from '../ui/Button';
 import { Field, Input, Select, Textarea } from '../ui/Field';
@@ -88,10 +89,8 @@ export function BookingModal({ artisan, open, onClose }) {
     >
       {confirmed ? (
         <div className="py-2 text-center">
-          <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-accent-soft text-brand">
-            <CheckCircle2 className="h-7 w-7" aria-hidden="true" />
-          </div>
-          <h2 className="mt-4 text-xl font-bold">Request saved</h2>
+          <SuccessCheck />
+          <h2 className="mt-4 animate-rise text-xl font-bold [animation-delay:250ms]">Request saved</h2>
           <p className="mx-auto mt-2 max-w-sm text-sm text-muted">
             Your request for <span className="font-medium text-ink">{confirmed.service}</span> on{' '}
             <span className="font-medium text-ink">{formatDate(confirmed.date, { weekday: 'short', day: 'numeric', month: 'short' })}</span> is now

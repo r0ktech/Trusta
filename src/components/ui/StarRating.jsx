@@ -62,7 +62,8 @@ export function RatingInput({ value, onChange, invalid, name = 'rating' }) {
               aria-label={`${i} star${i > 1 ? 's' : ''} — ${LABELS[i]}`}
             />
             <Star
-              className={cn('h-8 w-8 transition-colors', i <= shown ? 'text-star' : 'text-line')}
+              key={value === i ? `on-${i}` : `off-${i}`}
+              className={cn('h-8 w-8 transition-colors', i <= shown ? 'text-star' : 'text-line', value === i && 'animate-pop')}
               fill="currentColor"
               strokeWidth={0}
               aria-hidden="true"

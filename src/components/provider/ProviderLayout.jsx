@@ -4,7 +4,7 @@ import { ArrowLeft, ExternalLink, Inbox, LayoutDashboard, MessageCircle, Setting
 import { Logo } from '../ui/Logo';
 import { Avatar } from '../ui/Avatar';
 import { PageLoader } from '../ui/Skeleton';
-import { SkipLink } from '../layout/Layouts';
+import { SkipLink, PageTransition } from '../layout/Layouts';
 import { useProvider } from '../../context/ProviderContext';
 import { useBookings } from '../../context/BookingsContext';
 import { getCategory } from '../../data/categories';
@@ -104,7 +104,13 @@ export default function ProviderLayout() {
         </aside>
 
         <main id="main" className="min-w-0 flex-1">
-          <Suspense fallback={<PageLoader />}>{profile ? <Outlet /> : <NoProviderProfile />}</Suspense>
+          <Suspense fallback={<PageLoader />}>{profile ? (
+              <PageTransition>
+                <Outlet />
+              </PageTransition>
+            ) : (
+              <NoProviderProfile />
+            )}</Suspense>
         </main>
       </div>
     </div>
