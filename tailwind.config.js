@@ -71,6 +71,43 @@ export default {
         shimmer: {
           '100%': { transform: 'translateX(100%)' },
         },
+        rise: {
+          from: { opacity: 0, transform: 'translateY(14px)' },
+          to: { opacity: 1, transform: 'translateY(0)' },
+        },
+        // Opacity only: a transform here would trap position:fixed children
+        // (like the profile's bottom action bar) inside the page while it runs.
+        'page-in': {
+          from: { opacity: 0 },
+          to: { opacity: 1 },
+        },
+        'word-up': {
+          from: { transform: 'translateY(105%)' },
+          to: { transform: 'translateY(0)' },
+        },
+        'heart-pop': {
+          '0%': { transform: 'scale(1)' },
+          '30%': { transform: 'scale(1.35)' },
+          '60%': { transform: 'scale(0.9)' },
+          '100%': { transform: 'scale(1)' },
+        },
+        burst: {
+          from: { opacity: 0.6, transform: 'scale(0.4)' },
+          to: { opacity: 0, transform: 'scale(1.9)' },
+        },
+        pop: {
+          '0%': { transform: 'scale(0.6)', opacity: 0 },
+          '70%': { transform: 'scale(1.12)', opacity: 1 },
+          '100%': { transform: 'scale(1)', opacity: 1 },
+        },
+        draw: {
+          from: { strokeDashoffset: 'var(--len, 60)' },
+          to: { strokeDashoffset: 0 },
+        },
+        'bubble-in': {
+          from: { opacity: 0, transform: 'translateY(8px) scale(0.96)' },
+          to: { opacity: 1, transform: 'translateY(0) scale(1)' },
+        },
       },
       animation: {
         'fade-in': 'fade-in 150ms ease-out',
@@ -78,6 +115,15 @@ export default {
         'slide-in-right': 'slide-in-right 220ms ease-out',
         'slide-in-left': 'slide-in-left 220ms ease-out',
         hang: 'hang 700ms cubic-bezier(0.3, 0.7, 0.4, 1) backwards',
+        rise: 'rise 480ms cubic-bezier(0.2, 0.7, 0.3, 1) backwards',
+        'page-in': 'page-in 260ms ease-out',
+        'word-up': 'word-up 650ms cubic-bezier(0.2, 0.8, 0.2, 1) backwards',
+        'heart-pop': 'heart-pop 450ms cubic-bezier(0.3, 0.7, 0.4, 1)',
+        burst: 'burst 550ms ease-out forwards',
+        pop: 'pop 380ms cubic-bezier(0.3, 0.7, 0.4, 1) backwards',
+        draw: 'draw 450ms ease-out backwards',
+        'bubble-in': 'bubble-in 240ms cubic-bezier(0.2, 0.7, 0.3, 1)',
+        shimmer: 'shimmer 1.4s infinite',
       },
     },
   },
