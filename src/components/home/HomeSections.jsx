@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowRight, Check, ChevronRight, Images, MapPin, Search, Send } from 'lucide-react';
+import { ArrowRight, Check, ChevronRight, MapPin } from 'lucide-react';
 import { CATEGORIES } from '../../data/categories';
 import { useArtisans } from '../../hooks/useArtisans';
 import { ArtisanCard } from '../artisans/ArtisanCard';
@@ -11,8 +11,8 @@ import { Avatar } from '../ui/Avatar';
 import { Tabs } from '../ui/Tabs';
 import { CategoryIcon } from '../artisans/CategoryIcon';
 import { AdirePattern } from '../ui/AdirePattern';
+import { HowItWorksDemo } from './HowItWorksDemo';
 import { Reveal } from '../ui/Motion';
-import { useInView } from '../../hooks/useInView';
 import { VerificationBadge } from '../artisans/VerificationBadge';
 import { getCategory } from '../../data/categories';
 import { cn, formatDate, pluralize } from '../../utils/format';
@@ -72,67 +72,12 @@ export function RecommendedArtisans() {
   );
 }
 
-const STEPS = [
-  {
-    icon: Search,
-    title: 'Search for a service in your area',
-    body: 'Tell us what you need and where. Pick your city — no location permission required.',
-  },
-  {
-    icon: Images,
-    title: 'Compare profiles, work samples and feedback',
-    body: 'Look at past jobs, read what customers said, check experience and starting prices side by side.',
-  },
-  {
-    icon: Send,
-    title: 'Contact or request a booking',
-    body: 'Send a message or a booking request with your preferred date, then track it from your dashboard.',
-  },
-];
 
 export function HowItWorksSteps() {
-  // Steps light up in order; the line to the next step draws once each one lands.
-  const [ref, inView] = useInView({ threshold: 0.35 });
-  const STEP_GAP = 380;
   return (
-    <section aria-labelledby="how-heading" className="container-page py-16 sm:py-20">
-      <SectionHeading
-        id="how-heading"
-        title="Hiring without the guesswork"
-        action={{ to: '/how-it-works', label: 'Learn more' }}
-      />
-      <ol ref={ref} className="mt-10 grid grid-cols-1 gap-6 md:grid-cols-3 md:gap-0">
-        {STEPS.map(({ icon: Icon, title, body }, i) => (
-          <li key={title} className="relative md:px-6 md:first:pl-0 md:last:pr-0">
-            {i < STEPS.length - 1 && (
-              <div className="absolute left-[3.25rem] right-0 top-6 hidden h-px bg-line md:block" aria-hidden="true">
-                <div
-                  className="h-full origin-left bg-accent transition-transform duration-500 ease-out"
-                  style={{ transform: inView ? 'scaleX(1)' : 'scaleX(0)', transitionDelay: `${i * STEP_GAP + 260}ms` }}
-                />
-              </div>
-            )}
-            <div className="flex items-start gap-4 md:block">
-              <span
-                className={cn(
-                  'relative flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl border border-line bg-surface text-brand shadow-card',
-                  inView ? 'animate-pop' : 'opacity-0',
-                )}
-                style={{ animationDelay: `${i * STEP_GAP}ms` }}
-              >
-                <Icon className="h-5 w-5" aria-hidden="true" />
-                <span className="absolute -right-1.5 -top-1.5 flex h-5 w-5 items-center justify-center rounded-full bg-primary text-[11px] font-bold text-on-primary">
-                  {i + 1}
-                </span>
-              </span>
-              <div className={cn('md:mt-5', inView ? 'animate-rise' : 'opacity-0')} style={{ animationDelay: `${i * STEP_GAP + 120}ms` }}>
-                <h3 className="text-lg font-bold">{title}</h3>
-                <p className="mt-1.5 text-muted">{body}</p>
-              </div>
-            </div>
-          </li>
-        ))}
-      </ol>
+    <section aria-labelledby="how-heading" className="container-page py-16 sm:py-24">
+      <SectionHeading id="how-heading" title="Hiring without the guesswork" action={{ to: '/how-it-works', label: 'Learn more' }} />
+      <HowItWorksDemo />
     </section>
   );
 }
@@ -148,8 +93,11 @@ export function ProviderCTA() {
   return (
     <section aria-labelledby="provider-cta-heading" className="container-page pb-16 sm:pb-20">
       <Reveal className="relative overflow-hidden rounded-3xl bg-forest px-6 py-10 text-white sm:px-10 sm:py-14 lg:px-14">
-        <div className="absolute inset-0 opacity-60 [mask-image:linear-gradient(100deg,transparent_35%,black_85%)]" aria-hidden="true">
-          <AdirePattern color="#1D5446" motif="stitch" scale={1.2} />
+        <div className="absolute inset-0 overflow-hidden opacity-60 [mask-image:linear-gradient(100deg,transparent_35%,black_85%)]" aria-hidden="true">
+          {/* drifts exactly one 48px tile per loop, so it never jumps */}
+          <div className="anim-drift absolute -bottom-12 -right-12 left-0 top-0">
+            <AdirePattern color="#1D5446" motif="stitch" scale={1.2} />
+          </div>
         </div>
         <div className="relative grid grid-cols-1 gap-10 lg:grid-cols-[1.2fr_1fr] lg:items-center">
           <div>
@@ -197,9 +145,14 @@ export function ProviderCTA() {
               {['New booking request', 'Profile 67% complete'].map((t, i) => (
                 <div key={t} className="flex items-center justify-between rounded-xl bg-white/[0.07] px-3.5 py-3 text-sm">
                   <span className="text-white/85">{t}</span>
-                  <span className={i === 0 ? 'rounded-full bg-[#4E9F70] px-2 py-0.5 text-[11px] font-semibold' : 'text-xs text-white/50'}>
-                    {i === 0 ? 'New' : 'Continue'}
-                  </span>
+                  {i === 0 ? (
+                    <span className="relative flex">
+                      <span className="anim-ping absolute inset-0 rounded-full bg-[#4E9F70]" />
+                      <span className="relative rounded-full bg-[#4E9F70] px-2 py-0.5 text-[11px] font-semibold">New</span>
+                    </span>
+                  ) : (
+                    <span className="text-xs text-white/50">Continue</span>
+                  )}
                 </div>
               ))}
             </div>
