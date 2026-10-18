@@ -1,5 +1,6 @@
 import { Hero } from '../components/home/Hero';
 import { TrustStrip } from '../components/home/TrustStrip';
+import { TradeTicker } from '../components/home/TradeTicker';
 import {
   PopularCategories,
   RecommendedArtisans,
@@ -18,6 +19,7 @@ export default function HomePage() {
   return (
     <>
       <Hero />
+      <TradeTicker />
       <TrustStrip />
       <PopularCategories />
       <RecommendedArtisans />
