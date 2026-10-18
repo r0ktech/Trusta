@@ -14,6 +14,7 @@ const DEFAULT_PREFERENCES = {
     sms: false,
   },
   defaultLocation: '',
+  motionPaused: false,
 };
 
 const systemPrefersDark = () =>
@@ -38,6 +39,14 @@ export function PreferencesProvider({ children }) {
     document.querySelector('meta[name="theme-color"]')?.setAttribute('content', resolvedTheme === 'dark' ? '#0D1211' : '#123F36');
   }, [resolvedTheme]);
 
+  // Freezes the landing page's looping animations (WCAG 2.2.2 pause control).
+  useEffect(() => {
+    if (prefs.motionPaused) document.documentElement.dataset.motion = 'paused';
+    else delete document.documentElement.dataset.motion;
+  }, [prefs.motionPaused]);
+
+  const setMotionPaused = useCallback((motionPaused) => setPrefs((p) => ({ ...p, motionPaused })), [setPrefs]);
+
   const setTheme = useCallback((theme) => setPrefs((p) => ({ ...p, theme })), [setPrefs]);
   const setNotification = useCallback(
     (key, value) => setPrefs((p) => ({ ...p, notifications: { ...DEFAULT_PREFERENCES.notifications, ...p.notifications, [key]: value } })),
@@ -51,11 +60,13 @@ export function PreferencesProvider({ children }) {
       resolvedTheme,
       notifications: { ...DEFAULT_PREFERENCES.notifications, ...prefs.notifications },
       defaultLocation: prefs.defaultLocation ?? '',
+      motionPaused: !!prefs.motionPaused,
       setTheme,
       setNotification,
       setDefaultLocation,
+      setMotionPaused,
     }),
-    [prefs, resolvedTheme, setTheme, setNotification, setDefaultLocation],
+    [prefs, resolvedTheme, setTheme, setNotification, setDefaultLocation, setMotionPaused],
   );
 
   return <PreferencesContext.Provider value={value}>{children}</PreferencesContext.Provider>;
