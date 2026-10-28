@@ -1,0 +1,367 @@
+// Trusta data model. Money is stored as whole naira (Int).
+// Dates the user picks (booking dates) are stored as DATE, without time zone.
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ---------------------------------------------------------------------------
+// Accounts
+
+enum Role {
+  CUSTOMER
+  PROVIDER
+  ADMIN
+}
+
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  passwordHash String
+  name         String
+  phone        String?
+  city         String?
+  role         Role     @default(CUSTOMER)
+  /// Notification preferences and default search location.
+  preferences  Json     @default("{}")
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  sessions        Session[]
+  resetTokens     PasswordResetToken[]
+  provider        Provider?
+  bookings        Booking[]            @relation("CustomerBookings")
+  reviews         Review[]
+  saved           SavedProvider[]
+  conversations   Conversation[]       @relation("CustomerConversations")
+  messages        Message[]
+  notifications   Notification[]
+  uploads         Upload[]
+  bookingEvents   BookingEvent[]
+}
+
+/// Opaque session tokens. Only a SHA-256 hash of the token is stored.
+model Session {
+  id         String   @id @default(cuid())
+  tokenHash  String   @unique
+  userId     String
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  expiresAt  DateTime
+  userAgent  String?
+  ip         String?
+  createdAt  DateTime @default(now())
+  lastUsedAt DateTime @default(now())
+
+  @@index([userId])
+}
+
+model PasswordResetToken {
+  id        String    @id @default(cuid())
+  tokenHash String    @unique
+  userId    String
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  expiresAt DateTime
+  usedAt    DateTime?
+  createdAt DateTime  @default(now())
+
+  @@index([userId])
+}
+
+// ---------------------------------------------------------------------------
+// Catalogue
+
+model Category {
+  id          String     @id // slug, e.g. "electrician"
+  name        String
+  provider    String // what a practitioner is called, e.g. "Electrician"
+  icon        String
+  tone        String
+  board       String
+  description String
+  keywords    String[]
+  popular     Boolean    @default(false)
+  sortOrder   Int        @default(0)
+  providers   Provider[]
+}
+
+model City {
+  id    String   @id // slug, e.g. "port-harcourt"
+  name  String   @unique
+  state String
+  areas String[]
+}
+
+// ---------------------------------------------------------------------------
+// Providers
+
+enum VerificationStatus {
+  UNVERIFIED
+  PENDING
+  VERIFIED
+}
+
+enum PricingType {
+  FIXED
+  HOURLY
+  QUOTE
+}
+
+enum ContactPreference {
+  PHONE
+  WHATSAPP
+  IN_APP
+}
+
+enum AvailabilityStatus {
+  AVAILABLE
+  BUSY
+  UNAVAILABLE
+}
+
+model Provider {
+  id                 String             @id @default(cuid())
+  /// Null for seeded demo providers, which have no login.
+  userId             String?            @unique
+  user               User?              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  slug               String             @unique
+  name               String
+  profileImage       String?
+  categoryId         String
+  category           Category           @relation(fields: [categoryId], references: [id])
+  specialties        String[]
+  bio                String
+  city               String
+  state              String
+  serviceAreas       String[]
+  yearsOfExperience  Int
+  /// Only an admin can change this.
+  verificationStatus VerificationStatus @default(UNVERIFIED)
+  pricingType        PricingType
+  startingPrice      Int?
+  priceUnit          String?
+  contactPreference  ContactPreference  @default(IN_APP)
+  /// Private: never returned by public endpoints.
+  phone              String?
+  email              String?
+  languages          String[]           @default(["English"])
+  availabilityStatus AvailabilityStatus @default(AVAILABLE)
+  workDays           String[]           @default(["Mon", "Tue", "Wed", "Thu", "Fri", "Sat"])
+  workHours          String             @default("8:00 AM – 6:00 PM")
+  availabilityNote   String?
+  /// Hidden from search when false.
+  listed             Boolean            @default(true)
+  isDemo             Boolean            @default(false)
+  /// Denormalised from visible reviews; recomputed on every review change.
+  ratingAvg          Float              @default(0)
+  reviewCount        Int                @default(0)
+  /// Lower-cased name, trade, skills, bio and areas, for substring search.
+  searchText         String             @default("")
+  createdAt          DateTime           @default(now())
+  updatedAt          DateTime           @updatedAt
+
+  services      Service[]
+  portfolio     PortfolioItem[]
+  bookings      Booking[]
+  reviews       Review[]
+  savedBy       SavedProvider[]
+  conversations Conversation[]
+  views         ProfileViewDay[]
+
+  @@index([categoryId])
+  @@index([city])
+  @@index([listed, ratingAvg])
+}
+
+model Service {
+  id          String      @id @default(cuid())
+  providerId  String
+  provider    Provider    @relation(fields: [providerId], references: [id], onDelete: Cascade)
+  name        String
+  pricingType PricingType
+  price       Int?
+  sortOrder   Int         @default(0)
+
+  @@index([providerId])
+}
+
+model PortfolioItem {
+  id         String   @id @default(cuid())
+  providerId String
+  provider   Provider @relation(fields: [providerId], references: [id], onDelete: Cascade)
+  title      String
+  location   String?
+  imageUrl   String?
+  tone       Int      @default(0)
+  sortOrder  Int      @default(0)
+  createdAt  DateTime @default(now())
+
+  @@index([providerId])
+}
+
+/// Daily profile-view counter, for the provider dashboard.
+model ProfileViewDay {
+  providerId String
+  provider   Provider @relation(fields: [providerId], references: [id], onDelete: Cascade)
+  day        DateTime @db.Date
+  count      Int      @default(0)
+
+  @@id([providerId, day])
+}
+
+// ---------------------------------------------------------------------------
+// Bookings
+
+enum BookingStatus {
+  PENDING
+  ACCEPTED
+  COMPLETED
+  CANCELLED
+}
+
+enum Party {
+  CUSTOMER
+  PROVIDER
+}
+
+model Booking {
+  id          String         @id @default(cuid())
+  customerId  String
+  customer    User           @relation("CustomerBookings", fields: [customerId], references: [id], onDelete: Cascade)
+  providerId  String
+  provider    Provider       @relation(fields: [providerId], references: [id], onDelete: Cascade)
+  service     String
+  description String
+  date        DateTime       @db.Date
+  timeWindow  String
+  address     String
+  budget      Int?
+  notes       String         @default("")
+  status      BookingStatus  @default(PENDING)
+  cancelledBy Party?
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+
+  events BookingEvent[]
+  review Review?
+
+  @@index([customerId, status])
+  @@index([providerId, status])
+}
+
+model BookingEvent {
+  id        String        @id @default(cuid())
+  bookingId String
+  booking   Booking       @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  status    BookingStatus
+  note      String
+  actorId   String?
+  actor     User?         @relation(fields: [actorId], references: [id], onDelete: SetNull)
+  createdAt DateTime      @default(now())
+
+  @@index([bookingId])
+}
+
+// ---------------------------------------------------------------------------
+// Reviews
+
+model Review {
+  id         String   @id @default(cuid())
+  providerId String
+  provider   Provider @relation(fields: [providerId], references: [id], onDelete: Cascade)
+  /// One review per booking. Null only for seeded sample reviews.
+  bookingId  String?  @unique
+  booking    Booking? @relation(fields: [bookingId], references: [id], onDelete: SetNull)
+  authorId   String?
+  author     User?    @relation(fields: [authorId], references: [id], onDelete: SetNull)
+  authorName String
+  rating     Int
+  text       String
+  service    String?
+  photoUrl   String?
+  isSample   Boolean  @default(false)
+  /// Set by moderators; hidden reviews don't count towards the rating.
+  hidden     Boolean  @default(false)
+  createdAt  DateTime @default(now())
+
+  @@index([providerId, hidden, createdAt])
+}
+
+// ---------------------------------------------------------------------------
+// Saved providers
+
+model SavedProvider {
+  userId     String
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  providerId String
+  provider   Provider @relation(fields: [providerId], references: [id], onDelete: Cascade)
+  createdAt  DateTime @default(now())
+
+  @@id([userId, providerId])
+}
+
+// ---------------------------------------------------------------------------
+// Messaging
+
+model Conversation {
+  id                 String    @id @default(cuid())
+  customerId         String
+  customer           User      @relation("CustomerConversations", fields: [customerId], references: [id], onDelete: Cascade)
+  providerId         String
+  provider           Provider  @relation(fields: [providerId], references: [id], onDelete: Cascade)
+  customerLastReadAt DateTime?
+  providerLastReadAt DateTime?
+  lastMessageAt      DateTime  @default(now())
+  createdAt          DateTime  @default(now())
+
+  messages Message[]
+
+  @@unique([customerId, providerId])
+  @@index([providerId])
+}
+
+model Message {
+  id             String       @id @default(cuid())
+  conversationId String
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  senderId       String
+  sender         User         @relation(fields: [senderId], references: [id], onDelete: Cascade)
+  body           String
+  createdAt      DateTime     @default(now())
+
+  @@index([conversationId, createdAt])
+}
+
+// ---------------------------------------------------------------------------
+// Notifications and uploads
+
+model Notification {
+  id        String    @id @default(cuid())
+  userId    String
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type      String
+  title     String
+  body      String
+  link      String?
+  readAt    DateTime?
+  createdAt DateTime  @default(now())
+
+  @@index([userId, readAt])
+}
+
+model Upload {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  url       String   @unique
+  width     Int
+  height    Int
+  bytes     Int
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+}
