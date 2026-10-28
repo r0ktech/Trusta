@@ -17,6 +17,19 @@ npm run preview    # serve the production build
 
 The app uses client-side routing. When you deploy `dist/`, configure the host to fall back to `index.html` for unknown paths (SPA rewrite). Without that, deep links such as `/artisan/a01` will 404.
 
+## Backend
+
+The API lives in [`server/`](server/README.md): Node.js, Express, PostgreSQL and Prisma. It covers accounts, search, provider profiles, bookings, reviews, messaging, notifications and uploads. To run both together:
+
+```bash
+cd server && npm install && cp .env.example .env   # then set DATABASE_URL
+npx prisma migrate deploy && npm run db:seed && npm run dev
+# in another terminal, from the repo root:
+npm run dev
+```
+
+The dev server forwards `/api` and `/uploads` to the API on port 4000. The web app itself still uses the mock data described below; connecting it to the API is the next step.
+
 ## Stack
 
 React 18 + Vite, JavaScript, Tailwind CSS 3, React Router 6, React Hook Form, Lucide icons, Recharts (one lazy-loaded chart on the provider dashboard). There are no other runtime dependencies.
